@@ -9,6 +9,31 @@ import Navbar from '@/components/Navbar';
 const WATCHLIST_KEY = 'netflix-clone-watchlist';
 const CONTINUE_KEY = 'netflix-clone-progress';
 
+function loadStoredJson(key, fallback) {
+  if (typeof window === 'undefined') {
+    return fallback;
+  }
+
+  try {
+    const value = window.localStorage.getItem(key);
+    return value ? JSON.parse(value) : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function saveStoredJson(key, value) {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  try {
+    window.localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    // Ignore storage write failures so the UI still works in restricted browsers.
+  }
+}
+
 export default function HomeScreen({ featured, rows }) {
   const [searchValue, setSearchValue] = useState('');
   const [selectedMovie, setSelectedMovie] = useState(null);
@@ -18,27 +43,16 @@ export default function HomeScreen({ featured, rows }) {
   const [progressMap, setProgressMap] = useState({});
 
   useEffect(() => {
-    try {
-      const storedWatchlist = window.localStorage.getItem(WATCHLIST_KEY);
-      const storedProgress = window.localStorage.getItem(CONTINUE_KEY);
-      if (storedWatchlist) {
-        setWatchlistIds(JSON.parse(storedWatchlist));
-      }
-      if (storedProgress) {
-        setProgressMap(JSON.parse(storedProgress));
-      }
-    } catch {
-      setWatchlistIds([]);
-      setProgressMap({});
-    }
+    setWatchlistIds(loadStoredJson(WATCHLIST_KEY, []));
+    setProgressMap(loadStoredJson(CONTINUE_KEY, {}));
   }, []);
 
   useEffect(() => {
-    window.localStorage.setItem(WATCHLIST_KEY, JSON.stringify(watchlistIds));
+    saveStoredJson(WATCHLIST_KEY, watchlistIds);
   }, [watchlistIds]);
 
   useEffect(() => {
-    window.localStorage.setItem(CONTINUE_KEY, JSON.stringify(progressMap));
+    saveStoredJson(CONTINUE_KEY, progressMap);
   }, [progressMap]);
 
   const allMovies = useMemo(() => {
@@ -139,19 +153,27 @@ export default function HomeScreen({ featured, rows }) {
     }));
   };
 
+  const handleNavSelect = (filterId) => {
+    setActiveFilter(filterId);
+    document.getElementById('rows')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
   const playSomething = () => {
     if (!allMovies.length) {
       return;
     }
     const randomMovie = allMovies[Math.floor(Math.random() * allMovies.length)];
-    setManualFeatured(randomMovie);
-    setSelectedMovie(randomMovie);
     playMovie(randomMovie);
   };
 
   return (
     <main className="min-h-screen bg-[#141414] text-white">
-      <Navbar searchValue={searchValue} onSearchChange={setSearchValue} onPlaySomething={playSomething} />
+      <Navbar
+        searchValue={searchValue}
+        onSearchChange={setSearchValue}
+        onPlaySomething={playSomething}
+        onSelectFilter={handleNavSelect}
+      />
       <Banner
         movie={featuredMovie}
         onMoreInfo={setSelectedMovie}
@@ -164,6 +186,7 @@ export default function HomeScreen({ featured, rows }) {
         {filterTabs.map((tab) => (
           <button
             key={tab.id}
+            type="button"
             onClick={() => setActiveFilter(tab.id)}
             className={`rounded-full border px-4 py-2 text-sm font-bold transition ${
               activeFilter === tab.id

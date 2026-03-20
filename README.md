@@ -4,7 +4,7 @@ A responsive Netflix-inspired homepage built with **Next.js App Router**, **Tail
 
 ## Features
 
-- Navbar with Netflix-style logo, search input, and profile icon.
+- Navbar with Netflix-style logo, working category shortcuts, search input, and profile icon.
 - Hero banner with a featured movie pulled from TMDB.
 - Reusable horizontal movie rows for Trending, Top Rated, Action, and Comedy.
 - Dark #111 theme with bold typography inspired by Netflix.
@@ -67,6 +67,6 @@ Open <http://localhost:3000>.
 
 - If `TMDB_API_KEY` is missing, the homepage now renders a built-in demo catalog with posters/backdrops so the UI still looks like a Netflix clone.
 - TMDB API failures and timeouts now fall back safely to that demo catalog during build/runtime so Vercel deployments do not crash just because TMDB is temporarily unavailable.
-- Next.js production builds are configured to skip ESLint blocking in Vercel because linting is already handled separately in CI.
+- Next.js production builds keep linting enabled so local and CI builds catch issues before deployment.
 - Vercel deployment should use the default Next.js output mode; self-hosting-only output settings are intentionally avoided here so the root route resolves correctly on Vercel.
 - TMDB image URLs are built from `image.tmdb.org`, and TMDB requires attribution for API/image usage.
