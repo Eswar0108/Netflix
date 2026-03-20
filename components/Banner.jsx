@@ -31,18 +31,21 @@ export default function Banner({ movie, onMoreInfo, onAddToList, isInMyList, onP
         <p className="max-w-2xl text-base leading-7 text-zinc-200 sm:text-lg">{movie.overview}</p>
         <div className="flex flex-wrap gap-4 pt-2">
           <button
+            type="button"
             onClick={() => onPlayMovie(movie)}
             className="rounded bg-white px-8 py-3 text-base font-extrabold text-black transition hover:bg-zinc-200"
           >
             ▶ Play
           </button>
           <button
+            type="button"
             onClick={() => onMoreInfo(movie)}
             className="rounded bg-zinc-500/80 px-8 py-3 text-base font-extrabold text-white transition hover:bg-zinc-500"
           >
             More Info
           </button>
           <button
+            type="button"
             onClick={() => onAddToList(movie)}
             className="rounded border border-white/30 bg-black/35 px-6 py-3 text-base font-extrabold text-white transition hover:bg-black/55"
           >

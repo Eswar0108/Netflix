@@ -169,6 +169,7 @@ export default function HomeScreen({ featured, rows }) {
   return (
     <main className="min-h-screen bg-[#141414] text-white">
       <Navbar
+        activeFilter={activeFilter}
         searchValue={searchValue}
         onSearchChange={setSearchValue}
         onPlaySomething={playSomething}

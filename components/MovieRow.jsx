@@ -27,6 +27,7 @@ export default function MovieRow({ title, movies, onSelectMovie, progressMap = {
         <h2 className="text-2xl font-black tracking-tight text-white sm:text-3xl">{title}</h2>
         <div className="hidden items-center gap-2 md:flex">
           <button
+            type="button"
             onClick={() => scrollRow(-1)}
             className="grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-zinc-900/90 text-white transition hover:bg-zinc-800"
             aria-label={`Scroll ${title} left`}
@@ -34,6 +35,7 @@ export default function MovieRow({ title, movies, onSelectMovie, progressMap = {
             ‹
           </button>
           <button
+            type="button"
             onClick={() => scrollRow(1)}
             className="grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-zinc-900/90 text-white transition hover:bg-zinc-800"
             aria-label={`Scroll ${title} right`}
@@ -54,6 +56,7 @@ export default function MovieRow({ title, movies, onSelectMovie, progressMap = {
             return (
               <button
                 key={`${title}-${movie.id}`}
+                type="button"
                 onClick={() => onSelectMovie(movie)}
                 className="poster-card-hover group relative min-w-[220px] overflow-hidden rounded-md bg-zinc-900 text-left"
               >

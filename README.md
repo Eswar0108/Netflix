@@ -65,7 +65,7 @@ Open <http://localhost:3000>.
 
 ## Notes
 
-- If `TMDB_API_KEY` is missing, the homepage now renders a built-in demo catalog with posters/backdrops so the UI still looks like a Netflix clone.
+- If neither `TMDB_API_KEY` nor `TMDB_ACCESS_TOKEN` is set, the homepage renders a built-in demo catalog with posters/backdrops so the UI still looks like a Netflix clone.
 - TMDB API failures and timeouts now fall back safely to that demo catalog during build/runtime so Vercel deployments do not crash just because TMDB is temporarily unavailable.
 - Next.js production builds keep linting enabled so local and CI builds catch issues before deployment.
 - Vercel deployment should use the default Next.js output mode; self-hosting-only output settings are intentionally avoided here so the root route resolves correctly on Vercel.
