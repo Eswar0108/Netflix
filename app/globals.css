@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background: #111111;
+  color: #ffffff;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+::-webkit-scrollbar {
+  height: 0;
+  width: 0;
+}
+
+::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.text-shadow-hero {
+  text-shadow: 0 10px 34px rgba(0, 0, 0, 0.72);
+}
+
+.poster-card-hover {
+  transition: transform 300ms ease, box-shadow 300ms ease;
+}
+
+.poster-card-hover:hover {
+  transform: scale(1.1);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.65);
+}
