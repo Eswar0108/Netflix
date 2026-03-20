@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StreamSphere</title>
+    <meta
+      name="description"
+      content="StreamSphere is a simple Netflix-style clone with a featured hero, searchable catalog, and watchlist actions."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Free deployable demo</p>
+          <a class="brand" href="#hero">StreamSphere</a>
+        </div>
+        <nav class="nav-links" aria-label="Primary navigation">
+          <a href="#trending">Trending</a>
+          <a href="#catalog">Catalog</a>
+          <a href="#watchlist">My List</a>
+        </nav>
+      </header>
+
+      <main>
+        <section class="hero" id="hero">
+          <div class="hero-copy">
+            <span class="pill">Now Streaming</span>
+            <h1 id="hero-title">Midnight Protocol</h1>
+            <p id="hero-description">
+              A former cyber-intelligence analyst uncovers a global conspiracy while racing to stop a blackout before sunrise.
+            </p>
+            <div class="hero-meta">
+              <span id="hero-year">2026</span>
+              <span id="hero-rating">PG-13</span>
+              <span id="hero-length">2h 08m</span>
+            </div>
+            <div class="hero-actions">
+              <button class="btn btn-primary" id="play-featured">▶ Play Trailer</button>
+              <button class="btn btn-secondary" id="details-featured">ℹ More Info</button>
+            </div>
+          </div>
+          <div class="hero-panel">
+            <p class="panel-label">Featured update</p>
+            <div id="hero-status" class="hero-status">
+              Pick a title below to refresh the spotlight.
+            </div>
+            <div class="stats-grid">
+              <article>
+                <strong>12</strong>
+                <span>Curated titles</span>
+              </article>
+              <article>
+                <strong>3</strong>
+                <span>Interactive filters</span>
+              </article>
+              <article>
+                <strong>100%</strong>
+                <span>Static hosting friendly</span>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="trending">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Browse</p>
+              <h2>Trending this week</h2>
+            </div>
+            <div class="filters" role="group" aria-label="Genre filter">
+              <button class="chip is-active" data-filter="All">All</button>
+              <button class="chip" data-filter="Sci-Fi">Sci-Fi</button>
+              <button class="chip" data-filter="Drama">Drama</button>
+              <button class="chip" data-filter="Action">Action</button>
+            </div>
+          </div>
+
+          <div class="toolbar">
+            <label class="searchbox" for="search-input">
+              <span>Search titles</span>
+              <input
+                id="search-input"
+                type="search"
+                placeholder="Try 'orbit' or 'signal'"
+                autocomplete="off"
+              />
+            </label>
+            <button class="btn btn-secondary" id="surprise-me">Surprise Me</button>
+          </div>
+
+          <div class="catalog-grid" id="catalog" aria-live="polite"></div>
+        </section>
+
+        <section class="section watchlist-section" id="watchlist">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">Saved</p>
+              <h2>My List</h2>
+            </div>
+            <p id="watchlist-count">0 titles saved for later</p>
+          </div>
+          <div id="watchlist-grid" class="watchlist-grid empty-state">
+            Save titles to build your next binge session.
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <dialog id="details-modal">
+      <form method="dialog" class="modal-card">
+        <button class="modal-close" aria-label="Close details">✕</button>
+        <p class="eyebrow">Title details</p>
+        <h3 id="modal-title"></h3>
+        <p id="modal-copy"></p>
+        <div id="modal-meta" class="hero-meta"></div>
+      </form>
+    </dialog>
+
+    <template id="card-template">
+      <article class="card">
+        <div class="card-art"></div>
+        <div class="card-body">
+          <div class="card-topline">
+            <h3 class="card-title"></h3>
+            <span class="card-badge"></span>
+          </div>
+          <p class="card-description"></p>
+          <div class="hero-meta small-meta"></div>
+          <div class="card-actions">
+            <button class="btn btn-primary small play-btn">Play</button>
+            <button class="btn btn-secondary small info-btn">Info</button>
+            <button class="btn btn-ghost small list-btn">+ My List</button>
+          </div>
+        </div>
+      </article>
+    </template>
+
+    <script src="script.js"></script>
+  </body>
+</html>
