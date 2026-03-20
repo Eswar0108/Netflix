@@ -1,4 +1,4 @@
-name: Validate Next.js app
+name: Validate static site
 
 on:
   pull_request:
@@ -13,17 +13,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
+      - name: Validate JavaScript syntax
+        run: node --check script.js
 
-      - name: Install dependencies
-        run: npm install
+      - name: Verify required files exist
+        run: |
+          test -f index.html
+          test -f styles.css
+          test -f script.js
+          test -f .github/workflows/deploy.yml
+          test -f .nojekyll
 
-      - name: Lint
-        run: npm run lint
-
-      - name: Build
-        run: npm run build
+      - name: Smoke test local static server
+        run: |
+          python3 -m http.server 8000 >/tmp/netflix-validate.log 2>&1 &
+          SERVER_PID=$!
+          sleep 2
+          curl -I http://127.0.0.1:8000/index.html
+          kill $SERVER_PID
+          wait $SERVER_PID 2>/dev/null || true
