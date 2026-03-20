@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Netflix Clone</title>
+    <title>StreamSphere</title>
     <meta
       name="description"
-      content="A polished Netflix-style clone with a cinematic billboard, genre rows, search, watchlist, and GitHub Pages deployment support."
+      content="StreamSphere is a simple Netflix-style clone with a featured hero, searchable catalog, and watchlist actions."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -17,153 +17,128 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="app-shell">
-      <header class="masthead">
-        <div class="masthead-left">
-          <a class="brandmark" href="#home" aria-label="Netflix clone home">NETFLIX</a>
-          <nav class="primary-nav" aria-label="Primary navigation">
-            <a href="#home">Home</a>
-            <a href="#series">TV Shows</a>
-            <a href="#movies">Movies</a>
-            <a href="#latest">New &amp; Popular</a>
-            <a href="#list">My List</a>
-          </nav>
+    <div class="page-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Free deployable demo</p>
+          <a class="brand" href="#hero">StreamSphere</a>
         </div>
-        <div class="masthead-right">
-          <label class="search-pill" for="search-input">
-            <span aria-hidden="true">⌕</span>
-            <input id="search-input" type="search" placeholder="Titles, people, genres" autocomplete="off" />
-          </label>
-          <button id="surprise-button" class="icon-button" aria-label="Play something random">⟳</button>
-          <button id="sound-toggle" class="icon-button" aria-label="Toggle sound">🔊</button>
-          <div class="profile-chip" aria-label="Profile menu">
-            <span class="avatar">N</span>
-            <span>Guest</span>
-          </div>
-        </div>
+        <nav class="nav-links" aria-label="Primary navigation">
+          <a href="#trending">Trending</a>
+          <a href="#catalog">Catalog</a>
+          <a href="#watchlist">My List</a>
+        </nav>
       </header>
 
       <main>
-        <section class="billboard" id="home">
-          <div class="billboard-backdrop"></div>
-          <div class="billboard-copy">
-            <p class="billboard-kicker">NETFLIX FILM</p>
-            <h1 id="hero-title">The Last Kingdom: Afterglow</h1>
-            <div class="billboard-meta">
-              <span class="match">98% Match</span>
-              <span id="hero-year">2026</span>
-              <span id="hero-maturity">TV-MA</span>
-              <span id="hero-runtime">2h 14m</span>
-              <span id="hero-category">Thriller</span>
-            </div>
-            <p id="hero-description" class="billboard-description">
-              When a vanished heir resurfaces in a city ruled by surveillance, a burned-out strategist must build a crew, steal a data vault, and outrun a nation watching every move.
+        <section class="hero" id="hero">
+          <div class="hero-copy">
+            <span class="pill">Now Streaming</span>
+            <h1 id="hero-title">Midnight Protocol</h1>
+            <p id="hero-description">
+              A former cyber-intelligence analyst uncovers a global conspiracy while racing to stop a blackout before sunrise.
             </p>
-            <div class="billboard-actions">
-              <button id="play-hero" class="cta cta-primary">▶ Play</button>
-              <button id="info-hero" class="cta cta-secondary">ⓘ More Info</button>
-              <button id="list-hero" class="circle-action" aria-label="Add featured title to My List">＋</button>
+            <div class="hero-meta">
+              <span id="hero-year">2026</span>
+              <span id="hero-rating">PG-13</span>
+              <span id="hero-length">2h 08m</span>
             </div>
-            <div id="hero-status" class="hero-status">Hover a title card to preview it here.</div>
-          </div>
-          <aside class="billboard-sidecar">
-            <div class="sidecar-card top10-card">
-              <p class="overline">Top 10 in the U.S. Today</p>
-              <ol id="top-ten-list" class="top-ten-list"></ol>
+            <div class="hero-actions">
+              <button class="btn btn-primary" id="play-featured">▶ Play Trailer</button>
+              <button class="btn btn-secondary" id="details-featured">ℹ More Info</button>
             </div>
-            <div class="sidecar-card live-card">
-              <p class="overline">Live Actions</p>
-              <div id="activity-log" class="activity-log" aria-live="polite"></div>
+          </div>
+          <div class="hero-panel">
+            <p class="panel-label">Featured update</p>
+            <div id="hero-status" class="hero-status">
+              Pick a title below to refresh the spotlight.
             </div>
-          </aside>
+            <div class="stats-grid">
+              <article>
+                <strong>12</strong>
+                <span>Curated titles</span>
+              </article>
+              <article>
+                <strong>3</strong>
+                <span>Interactive filters</span>
+              </article>
+              <article>
+                <strong>100%</strong>
+                <span>Static hosting friendly</span>
+              </article>
+            </div>
+          </div>
         </section>
 
-        <section class="subnav-strip" aria-label="Content controls">
-          <div class="genre-tabs" role="tablist" aria-label="Genre selector">
-            <button class="genre-tab is-active" data-genre="All">All</button>
-            <button class="genre-tab" data-genre="Thriller">Thriller</button>
-            <button class="genre-tab" data-genre="Sci-Fi">Sci-Fi</button>
-            <button class="genre-tab" data-genre="Drama">Drama</button>
-            <button class="genre-tab" data-genre="Action">Action</button>
+        <section class="section" id="trending">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Browse</p>
+              <h2>Trending this week</h2>
+            </div>
+            <div class="filters" role="group" aria-label="Genre filter">
+              <button class="chip is-active" data-filter="All">All</button>
+              <button class="chip" data-filter="Sci-Fi">Sci-Fi</button>
+              <button class="chip" data-filter="Drama">Drama</button>
+              <button class="chip" data-filter="Action">Action</button>
+            </div>
           </div>
-          <div class="subnav-actions">
-            <button id="autoplay-toggle" class="mini-pill is-active">Autoplay previews</button>
-            <button id="reset-filters" class="mini-pill">Reset filters</button>
+
+          <div class="toolbar">
+            <label class="searchbox" for="search-input">
+              <span>Search titles</span>
+              <input
+                id="search-input"
+                type="search"
+                placeholder="Try 'orbit' or 'signal'"
+                autocomplete="off"
+              />
+            </label>
+            <button class="btn btn-secondary" id="surprise-me">Surprise Me</button>
           </div>
+
+          <div class="catalog-grid" id="catalog" aria-live="polite"></div>
         </section>
 
-        <section class="content-rail" id="latest">
-          <div class="section-title-row">
-            <h2>Trending Now</h2>
-            <p id="results-summary">Showing all titles</p>
+        <section class="section watchlist-section" id="watchlist">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">Saved</p>
+              <h2>My List</h2>
+            </div>
+            <p id="watchlist-count">0 titles saved for later</p>
           </div>
-          <div id="featured-row" class="poster-row" aria-live="polite"></div>
-        </section>
-
-        <section class="content-rail" id="series">
-          <div class="section-title-row">
-            <h2>Popular on Netflix</h2>
-            <button class="text-button" data-fill-row="popular-row">Refresh row</button>
-          </div>
-          <div id="popular-row" class="poster-row"></div>
-        </section>
-
-        <section class="content-rail" id="movies">
-          <div class="section-title-row">
-            <h2>Only on Netflix</h2>
-            <button class="text-button" data-fill-row="only-row">Refresh row</button>
-          </div>
-          <div id="only-row" class="poster-row"></div>
-        </section>
-
-        <section class="content-rail continue-rail">
-          <div class="section-title-row">
-            <h2>Continue Watching</h2>
-            <p>Click a progress pill to jump back in.</p>
-          </div>
-          <div id="continue-row" class="continue-grid"></div>
-        </section>
-
-        <section class="content-rail my-list-rail" id="list">
-          <div class="section-title-row">
-            <h2>My List</h2>
-            <p id="my-list-summary">No titles saved yet</p>
-          </div>
-          <div id="my-list-row" class="poster-row empty-row">
-            <div class="empty-card">Add titles with + My List to build your queue.</div>
+          <div id="watchlist-grid" class="watchlist-grid empty-state">
+            Save titles to build your next binge session.
           </div>
         </section>
       </main>
     </div>
 
-    <aside id="details-drawer" class="details-drawer" aria-hidden="true">
-      <button id="close-drawer" class="close-drawer" aria-label="Close details">✕</button>
-      <div class="drawer-art" id="drawer-art"></div>
-      <div class="drawer-body">
-        <p class="overline">Title Preview</p>
-        <h3 id="drawer-title"></h3>
-        <div id="drawer-meta" class="billboard-meta compact"></div>
-        <p id="drawer-copy"></p>
-        <div class="drawer-actions">
-          <button id="drawer-play" class="cta cta-primary">▶ Resume</button>
-          <button id="drawer-list" class="cta cta-secondary">+ My List</button>
-        </div>
-      </div>
-    </aside>
+    <dialog id="details-modal">
+      <form method="dialog" class="modal-card">
+        <button class="modal-close" aria-label="Close details">✕</button>
+        <p class="eyebrow">Title details</p>
+        <h3 id="modal-title"></h3>
+        <p id="modal-copy"></p>
+        <div id="modal-meta" class="hero-meta"></div>
+      </form>
+    </dialog>
 
-    <template id="poster-template">
-      <article class="poster-card" tabindex="0">
-        <div class="poster-art">
-          <div class="poster-rank"></div>
-          <div class="poster-overlay">
-            <p class="poster-subtitle"></p>
-            <h3 class="poster-title"></h3>
-            <div class="poster-meta"></div>
-            <div class="poster-actions">
-              <button class="card-pill play-card">Play</button>
-              <button class="card-pill info-card">Details</button>
-              <button class="card-pill save-card">+ My List</button>
-            </div>
+    <template id="card-template">
+      <article class="card">
+        <div class="card-art"></div>
+        <div class="card-body">
+          <div class="card-topline">
+            <h3 class="card-title"></h3>
+            <span class="card-badge"></span>
+          </div>
+          <p class="card-description"></p>
+          <div class="hero-meta small-meta"></div>
+          <div class="card-actions">
+            <button class="btn btn-primary small play-btn">Play</button>
+            <button class="btn btn-secondary small info-btn">Info</button>
+            <button class="btn btn-ghost small list-btn">+ My List</button>
           </div>
         </div>
       </article>

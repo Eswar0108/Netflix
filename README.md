@@ -1,39 +1,32 @@
-# Netflix Clone
+# StreamSphere
 
-A more faithful Netflix-style clone built with plain HTML, CSS, and JavaScript. It recreates the familiar Netflix browsing feel with a billboard hero, multiple content rows, search, genre switching, continue-watching cards, a My List rail, and a slide-out details panel.
+A simple Netflix-style clone built with plain HTML, CSS, and JavaScript so it can be deployed for free on static hosts like GitHub Pages, Netlify, Cloudflare Pages, or Vercel.
 
 ## Features
 
-- Sticky Netflix-style navigation bar with search, profile chip, and quick actions.
-- Large billboard hero with play, more info, and save-to-list interactions.
-- Multiple content rails that feel closer to Netflix browsing rows.
-- Search, genre filters, autoplay preview toggle, and random title action.
-- Continue Watching and My List sections with live updates.
-- Static deployment support for GitHub Pages and other free hosts.
+- Hero banner with featured content and call-to-action buttons.
+- Search bar and genre chips for quick catalog filtering.
+- Interactive catalog cards with play, info, and watchlist actions.
+- “My List” section that updates instantly as titles are saved.
+- Fully static front-end with no build step required.
 
 ## Run locally
+
+Because the app is static, you can open `index.html` directly or serve the folder locally.
 
 ```bash
 python3 -m http.server 8000
 ```
 
-Then open <http://localhost:8000>.
+Then visit <http://localhost:8000>.
 
-## Deploy for free on GitHub Pages
+## Free deployment options
 
-This project includes a GitHub Actions workflow that deploys the site to GitHub Pages.
+- **GitHub Pages:** Push the repository and enable Pages for the root directory.
+- **Netlify / Cloudflare Pages / Vercel:** Import the repo and deploy as a static site with no build command.
 
-1. Push the repo to GitHub.
-2. In **Settings → Pages**, choose **Source: GitHub Actions**.
-3. Push to the `main` branch.
-4. GitHub Actions will publish the site automatically.
+## Files
 
-## Other free deployment options
-
-- Netlify
-- Vercel
-- Cloudflare Pages
-
-Because the project is fully static, no build command is required.
-
-A separate validation workflow now checks the static files, JavaScript syntax, and a local HTTP smoke test on pushes and pull requests.
+- `index.html` – page structure and modal/template markup.
+- `styles.css` – all layout, theme, and responsive styling.
+- `script.js` – mock catalog data and interactive actions.
