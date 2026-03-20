@@ -7,7 +7,7 @@ function releaseYear(date) {
   return date && date !== 'Unknown' ? String(date).slice(0, 4) : '—';
 }
 
-export default function MovieRow({ title, movies, onSelectMovie }) {
+export default function MovieRow({ title, movies, onSelectMovie, progressMap = {} }) {
   const rowRef = useRef(null);
 
   const scrollRow = (direction) => {
@@ -48,43 +48,55 @@ export default function MovieRow({ title, movies, onSelectMovie }) {
         <div className="pointer-events-none absolute inset-y-0 right-0 z-10 hidden w-20 bg-gradient-to-l from-[#111] to-transparent md:block" />
 
         <div ref={rowRef} className="hide-scrollbar flex gap-4 overflow-x-auto pb-6 scroll-smooth">
-          {movies.map((movie) => (
-            <button
-              key={`${title}-${movie.id}`}
-              onClick={() => onSelectMovie(movie)}
-              className="poster-card-hover group relative min-w-[220px] overflow-hidden rounded-md bg-zinc-900 text-left"
-            >
-              <div className="relative h-[330px] w-[220px] overflow-hidden rounded-md">
-                {movie.posterUrl ? (
-                  <Image
-                    src={movie.posterUrl}
-                    alt={movie.title}
-                    fill
-                    className="object-cover transition duration-300 group-hover:scale-110"
-                    sizes="220px"
-                  />
-                ) : (
-                  <div className="flex h-full w-full items-center justify-center bg-zinc-800 px-4 text-center text-sm text-zinc-400">
-                    No image available
-                  </div>
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/15 to-transparent opacity-95" />
-                <div className="absolute inset-x-0 bottom-0 space-y-2 p-4">
-                  <p className="line-clamp-2 text-lg font-extrabold text-white">{movie.title}</p>
-                  <div className="flex items-center gap-2 text-xs font-semibold text-zinc-200">
-                    <span className="font-black text-green-400">{movie.rating}</span>
-                    <span>{releaseYear(movie.releaseDate)}</span>
-                    <span className="rounded border border-white/25 px-1.5 py-0.5">HD</span>
-                  </div>
-                  <div className="translate-y-3 opacity-0 transition duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-                    <span className="inline-flex rounded-full bg-white/10 px-3 py-1 text-xs font-bold text-white">
-                      Click for details
-                    </span>
+          {movies.map((movie) => {
+            const progress = progressMap[movie.id] ?? null;
+
+            return (
+              <button
+                key={`${title}-${movie.id}`}
+                onClick={() => onSelectMovie(movie)}
+                className="poster-card-hover group relative min-w-[220px] overflow-hidden rounded-md bg-zinc-900 text-left"
+              >
+                <div className="relative h-[330px] w-[220px] overflow-hidden rounded-md">
+                  {movie.posterUrl ? (
+                    <Image
+                      src={movie.posterUrl}
+                      alt={movie.title}
+                      fill
+                      className="object-cover transition duration-300 group-hover:scale-110"
+                      sizes="220px"
+                    />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center bg-zinc-800 px-4 text-center text-sm text-zinc-400">
+                      No image available
+                    </div>
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/15 to-transparent opacity-95" />
+                  <div className="absolute inset-x-0 bottom-0 space-y-2 p-4">
+                    <p className="line-clamp-2 text-lg font-extrabold text-white">{movie.title}</p>
+                    <div className="flex items-center gap-2 text-xs font-semibold text-zinc-200">
+                      <span className="font-black text-green-400">{movie.rating}</span>
+                      <span>{releaseYear(movie.releaseDate)}</span>
+                      <span className="rounded border border-white/25 px-1.5 py-0.5">HD</span>
+                    </div>
+                    {progress !== null ? (
+                      <div className="space-y-1">
+                        <div className="h-1.5 w-full overflow-hidden rounded bg-white/20">
+                          <div className="h-full bg-red-600" style={{ width: `${progress}%` }} />
+                        </div>
+                        <p className="text-[11px] font-semibold text-zinc-200">Resume at {progress}%</p>
+                      </div>
+                    ) : null}
+                    <div className="translate-y-3 opacity-0 transition duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+                      <span className="inline-flex rounded-full bg-white/10 px-3 py-1 text-xs font-bold text-white">
+                        Click for details
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </button>
-          ))}
+              </button>
+            );
+          })}
         </div>
       </div>
     </section>

@@ -1,6 +1,6 @@
 import Image from 'next/image';
 
-export default function MovieModal({ movie, onClose, onToggleMyList, onSetFeatured, isInMyList }) {
+export default function MovieModal({ movie, onClose, onToggleMyList, onSetFeatured, isInMyList, onPlayMovie }) {
   if (!movie) {
     return null;
   }
@@ -49,7 +49,12 @@ export default function MovieModal({ movie, onClose, onToggleMyList, onSetFeatur
               <p><span className="font-semibold text-white">TMDB score:</span> {movie.rating}</p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <button className="rounded bg-white px-5 py-3 font-semibold text-black transition hover:bg-zinc-200">▶ Play</button>
+              <button
+                onClick={() => onPlayMovie(movie)}
+                className="rounded bg-white px-5 py-3 font-semibold text-black transition hover:bg-zinc-200"
+              >
+                ▶ Play
+              </button>
               <button
                 onClick={() => onToggleMyList(movie)}
                 className="rounded bg-zinc-800 px-5 py-3 font-semibold text-white transition hover:bg-zinc-700"

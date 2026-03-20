@@ -13,6 +13,7 @@ A responsive Netflix-inspired homepage built with **Next.js App Router**, **Tail
 - Hover effects inspired by Netflix with scale 1.1 and stronger shadow.
 - Clickable movie cards that open a richer detail modal with title, overview, poster, metadata, My List toggle, and set-as-featured action.
 - Search, category filters, random “Play Something”, and persistent My List functionality.
+- Continue Watching progress and Recommended For You rows driven by local state.
 - Loading UI and responsive layout optimized for Vercel deployment.
 
 ## Tech Stack

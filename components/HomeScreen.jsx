@@ -7,6 +7,7 @@ import MovieRow from '@/components/MovieRow';
 import Navbar from '@/components/Navbar';
 
 const WATCHLIST_KEY = 'netflix-clone-watchlist';
+const CONTINUE_KEY = 'netflix-clone-progress';
 
 export default function HomeScreen({ featured, rows }) {
   const [searchValue, setSearchValue] = useState('');
@@ -14,21 +15,31 @@ export default function HomeScreen({ featured, rows }) {
   const [activeFilter, setActiveFilter] = useState('all');
   const [watchlistIds, setWatchlistIds] = useState([]);
   const [manualFeatured, setManualFeatured] = useState(null);
+  const [progressMap, setProgressMap] = useState({});
 
   useEffect(() => {
     try {
-      const stored = window.localStorage.getItem(WATCHLIST_KEY);
-      if (stored) {
-        setWatchlistIds(JSON.parse(stored));
+      const storedWatchlist = window.localStorage.getItem(WATCHLIST_KEY);
+      const storedProgress = window.localStorage.getItem(CONTINUE_KEY);
+      if (storedWatchlist) {
+        setWatchlistIds(JSON.parse(storedWatchlist));
+      }
+      if (storedProgress) {
+        setProgressMap(JSON.parse(storedProgress));
       }
     } catch {
       setWatchlistIds([]);
+      setProgressMap({});
     }
   }, []);
 
   useEffect(() => {
     window.localStorage.setItem(WATCHLIST_KEY, JSON.stringify(watchlistIds));
   }, [watchlistIds]);
+
+  useEffect(() => {
+    window.localStorage.setItem(CONTINUE_KEY, JSON.stringify(progressMap));
+  }, [progressMap]);
 
   const allMovies = useMemo(() => {
     const seen = new Map();
@@ -42,6 +53,16 @@ export default function HomeScreen({ featured, rows }) {
 
   const watchlistMovies = useMemo(
     () => allMovies.filter((movie) => watchlistIds.includes(movie.id)),
+    [allMovies, watchlistIds]
+  );
+
+  const continueWatchingMovies = useMemo(
+    () => allMovies.filter((movie) => progressMap[movie.id]).sort((a, b) => progressMap[b.id] - progressMap[a.id]),
+    [allMovies, progressMap]
+  );
+
+  const recommendedMovies = useMemo(
+    () => allMovies.filter((movie) => !watchlistIds.includes(movie.id)).sort((a, b) => Number(b.rating) - Number(a.rating)).slice(0, 8),
     [allMovies, watchlistIds]
   );
 
@@ -77,8 +98,22 @@ export default function HomeScreen({ featured, rows }) {
       }
     }
 
+    if (activeFilter === 'all' && continueWatchingMovies.length) {
+      const continueMatches = continueWatchingMovies.filter((movie) => movie.title.toLowerCase().includes(needle));
+      if (continueMatches.length) {
+        searchedRows.unshift({ id: 'continue', title: 'Continue Watching', movies: continueMatches });
+      }
+    }
+
+    if (activeFilter === 'all' && recommendedMovies.length) {
+      const recommendedMatches = recommendedMovies.filter((movie) => movie.title.toLowerCase().includes(needle));
+      if (recommendedMatches.length) {
+        searchedRows.push({ id: 'recommended', title: 'Recommended For You', movies: recommendedMatches });
+      }
+    }
+
     return searchedRows;
-  }, [rows, activeFilter, searchValue, watchlistMovies]);
+  }, [rows, activeFilter, searchValue, watchlistMovies, continueWatchingMovies, recommendedMovies]);
 
   const featuredMovie = useMemo(() => {
     if (manualFeatured) {
@@ -96,6 +131,14 @@ export default function HomeScreen({ featured, rows }) {
     ));
   };
 
+  const playMovie = (movie) => {
+    setManualFeatured(movie);
+    setProgressMap((current) => ({
+      ...current,
+      [movie.id]: Math.min((current[movie.id] || 0) + 18, 95)
+    }));
+  };
+
   const playSomething = () => {
     if (!allMovies.length) {
       return;
@@ -103,6 +146,7 @@ export default function HomeScreen({ featured, rows }) {
     const randomMovie = allMovies[Math.floor(Math.random() * allMovies.length)];
     setManualFeatured(randomMovie);
     setSelectedMovie(randomMovie);
+    playMovie(randomMovie);
   };
 
   return (
@@ -113,6 +157,7 @@ export default function HomeScreen({ featured, rows }) {
         onMoreInfo={setSelectedMovie}
         onAddToList={toggleMyList}
         isInMyList={watchlistIds.includes(featuredMovie.id)}
+        onPlayMovie={playMovie}
       />
 
       <div className="flex flex-wrap gap-3 px-4 pb-6 sm:px-8">
@@ -134,7 +179,13 @@ export default function HomeScreen({ featured, rows }) {
       <div id="rows" className="space-y-10 px-4 pb-16 sm:px-8">
         {filteredRows.length ? (
           filteredRows.map((row) => (
-            <MovieRow key={row.id} title={row.title} movies={row.movies} onSelectMovie={setSelectedMovie} />
+            <MovieRow
+              key={row.id}
+              title={row.title}
+              movies={row.movies}
+              onSelectMovie={setSelectedMovie}
+              progressMap={progressMap}
+            />
           ))
         ) : (
           <div className="rounded-lg border border-white/10 bg-zinc-900/60 p-8 text-zinc-300">
@@ -149,6 +200,7 @@ export default function HomeScreen({ featured, rows }) {
         onToggleMyList={toggleMyList}
         onSetFeatured={setManualFeatured}
         isInMyList={selectedMovie ? watchlistIds.includes(selectedMovie.id) : false}
+        onPlayMovie={playMovie}
       />
     </main>
   );

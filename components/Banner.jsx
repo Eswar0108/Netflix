@@ -1,6 +1,6 @@
 import Image from 'next/image';
 
-export default function Banner({ movie, onMoreInfo, onAddToList, isInMyList }) {
+export default function Banner({ movie, onMoreInfo, onAddToList, isInMyList, onPlayMovie }) {
   return (
     <section className="relative min-h-[82vh] overflow-hidden bg-black px-4 pb-20 pt-16 sm:px-8">
       <div className="absolute inset-0">
@@ -30,7 +30,12 @@ export default function Banner({ movie, onMoreInfo, onAddToList, isInMyList }) {
         </div>
         <p className="max-w-2xl text-base leading-7 text-zinc-200 sm:text-lg">{movie.overview}</p>
         <div className="flex flex-wrap gap-4 pt-2">
-          <button className="rounded bg-white px-8 py-3 text-base font-extrabold text-black transition hover:bg-zinc-200">▶ Play</button>
+          <button
+            onClick={() => onPlayMovie(movie)}
+            className="rounded bg-white px-8 py-3 text-base font-extrabold text-black transition hover:bg-zinc-200"
+          >
+            ▶ Play
+          </button>
           <button
             onClick={() => onMoreInfo(movie)}
             className="rounded bg-zinc-500/80 px-8 py-3 text-base font-extrabold text-white transition hover:bg-zinc-500"
