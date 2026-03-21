@@ -1,241 +1,53 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import Banner from '@/components/Banner';
 import MovieModal from '@/components/MovieModal';
 import MovieRow from '@/components/MovieRow';
 import Navbar from '@/components/Navbar';
 
-const WATCHLIST_KEY = 'netflix-clone-watchlist';
-const CONTINUE_KEY = 'netflix-clone-progress';
-
-function loadStoredJson(key, fallback) {
-  if (typeof window === 'undefined') {
-    return fallback;
-  }
-
-  try {
-    const value = window.localStorage.getItem(key);
-    return value ? JSON.parse(value) : fallback;
-  } catch {
-    return fallback;
-  }
-}
-
-function saveStoredJson(key, value) {
-  if (typeof window === 'undefined') {
-    return;
-  }
-
-  try {
-    window.localStorage.setItem(key, JSON.stringify(value));
-  } catch {
-    // Ignore storage write failures so the UI still works in restricted browsers.
-  }
-}
-
 export default function HomeScreen({ featured, rows }) {
   const [searchValue, setSearchValue] = useState('');
   const [selectedMovie, setSelectedMovie] = useState(null);
-  const [activeFilter, setActiveFilter] = useState('all');
-  const [watchlistIds, setWatchlistIds] = useState([]);
-  const [manualFeatured, setManualFeatured] = useState(null);
-  const [progressMap, setProgressMap] = useState({});
-  const [hasLoadedStorage, setHasLoadedStorage] = useState(false);
-
-  useEffect(() => {
-    setWatchlistIds(loadStoredJson(WATCHLIST_KEY, []));
-    setProgressMap(loadStoredJson(CONTINUE_KEY, {}));
-    setHasLoadedStorage(true);
-  }, []);
-
-  useEffect(() => {
-    if (!hasLoadedStorage) {
-      return;
-    }
-
-    saveStoredJson(WATCHLIST_KEY, watchlistIds);
-  }, [hasLoadedStorage, watchlistIds]);
-
-  useEffect(() => {
-    if (!hasLoadedStorage) {
-      return;
-    }
-
-    saveStoredJson(CONTINUE_KEY, progressMap);
-  }, [hasLoadedStorage, progressMap]);
-
-  const allMovies = useMemo(() => {
-    const seen = new Map();
-    rows.flatMap((row) => row.movies).forEach((movie) => {
-      if (!seen.has(movie.id)) {
-        seen.set(movie.id, movie);
-      }
-    });
-    return [...seen.values()];
-  }, [rows]);
-
-  const watchlistMovies = useMemo(
-    () => allMovies.filter((movie) => watchlistIds.includes(movie.id)),
-    [allMovies, watchlistIds]
-  );
-
-  const continueWatchingMovies = useMemo(
-    () => allMovies.filter((movie) => progressMap[movie.id]).sort((a, b) => progressMap[b.id] - progressMap[a.id]),
-    [allMovies, progressMap]
-  );
-
-  const recommendedMovies = useMemo(
-    () => allMovies.filter((movie) => !watchlistIds.includes(movie.id)).sort((a, b) => Number(b.rating) - Number(a.rating)).slice(0, 8),
-    [allMovies, watchlistIds]
-  );
-
-  const filterTabs = useMemo(
-    () => [
-      { id: 'all', label: 'All' },
-      ...rows.map((row) => ({ id: row.id, label: row.title })),
-      { id: 'my-list', label: `My List (${watchlistMovies.length})` }
-    ],
-    [rows, watchlistMovies.length]
-  );
 
   const filteredRows = useMemo(() => {
     const needle = searchValue.trim().toLowerCase();
 
-    const baseRows = activeFilter === 'my-list'
-      ? [{ id: 'my-list', title: 'My List', movies: watchlistMovies }]
-      : activeFilter === 'all'
-        ? rows
-        : rows.filter((row) => row.id === activeFilter);
+    if (!needle) {
+      return rows;
+    }
 
-    const searchedRows = baseRows
+    return rows
       .map((row) => ({
         ...row,
         movies: row.movies.filter((movie) => movie.title.toLowerCase().includes(needle))
       }))
       .filter((row) => row.movies.length > 0);
-
-    if (activeFilter === 'all' && watchlistMovies.length) {
-      const myListMatches = watchlistMovies.filter((movie) => movie.title.toLowerCase().includes(needle));
-      if (myListMatches.length) {
-        searchedRows.push({ id: 'my-list', title: 'My List', movies: myListMatches });
-      }
-    }
-
-    if (activeFilter === 'all' && continueWatchingMovies.length) {
-      const continueMatches = continueWatchingMovies.filter((movie) => movie.title.toLowerCase().includes(needle));
-      if (continueMatches.length) {
-        searchedRows.unshift({ id: 'continue', title: 'Continue Watching', movies: continueMatches });
-      }
-    }
-
-    if (activeFilter === 'all' && recommendedMovies.length) {
-      const recommendedMatches = recommendedMovies.filter((movie) => movie.title.toLowerCase().includes(needle));
-      if (recommendedMatches.length) {
-        searchedRows.push({ id: 'recommended', title: 'Recommended For You', movies: recommendedMatches });
-      }
-    }
-
-    return searchedRows;
-  }, [rows, activeFilter, searchValue, watchlistMovies, continueWatchingMovies, recommendedMovies]);
+  }, [rows, searchValue]);
 
   const featuredMovie = useMemo(() => {
-    if (manualFeatured) {
-      return manualFeatured;
-    }
     const firstMatch = filteredRows.find((row) => row.movies[0])?.movies[0];
     return firstMatch || featured;
-  }, [featured, filteredRows, manualFeatured]);
-
-  const toggleMyList = (movie) => {
-    setWatchlistIds((current) => (
-      current.includes(movie.id)
-        ? current.filter((id) => id !== movie.id)
-        : [...current, movie.id]
-    ));
-  };
-
-  const playMovie = (movie) => {
-    setManualFeatured(movie);
-    setProgressMap((current) => ({
-      ...current,
-      [movie.id]: Math.min((current[movie.id] || 0) + 18, 95)
-    }));
-  };
-
-  const handleNavSelect = (filterId) => {
-    setActiveFilter(filterId);
-    document.getElementById('rows')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
-
-  const playSomething = () => {
-    if (!allMovies.length) {
-      return;
-    }
-    const randomMovie = allMovies[Math.floor(Math.random() * allMovies.length)];
-    playMovie(randomMovie);
-  };
+  }, [featured, filteredRows]);
 
   return (
     <main className="min-h-screen bg-[#141414] text-white">
-      <Navbar
-        activeFilter={activeFilter}
-        searchValue={searchValue}
-        onSearchChange={setSearchValue}
-        onPlaySomething={playSomething}
-        onSelectFilter={handleNavSelect}
-      />
-      <Banner
-        movie={featuredMovie}
-        onMoreInfo={setSelectedMovie}
-        onAddToList={toggleMyList}
-        isInMyList={watchlistIds.includes(featuredMovie.id)}
-        onPlayMovie={playMovie}
-      />
-
-      <div className="flex flex-wrap gap-3 px-4 pb-6 sm:px-8">
-        {filterTabs.map((tab) => (
-          <button
-            key={tab.id}
-            type="button"
-            onClick={() => setActiveFilter(tab.id)}
-            className={`rounded-full border px-4 py-2 text-sm font-bold transition ${
-              activeFilter === tab.id
-                ? 'border-white bg-white text-black'
-                : 'border-white/15 bg-zinc-900/80 text-white hover:bg-zinc-800'
-            }`}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
+      <Navbar searchValue={searchValue} onSearchChange={setSearchValue} />
+      <Banner movie={featuredMovie} onMoreInfo={setSelectedMovie} />
 
       <div id="rows" className="space-y-10 px-4 pb-16 sm:px-8">
         {filteredRows.length ? (
           filteredRows.map((row) => (
-            <MovieRow
-              key={row.id}
-              title={row.title}
-              movies={row.movies}
-              onSelectMovie={setSelectedMovie}
-              progressMap={progressMap}
-            />
+            <MovieRow key={row.id} title={row.title} movies={row.movies} onSelectMovie={setSelectedMovie} />
           ))
         ) : (
           <div className="rounded-lg border border-white/10 bg-zinc-900/60 p-8 text-zinc-300">
-            No movies matched “{searchValue}”. Try a different search or switch categories.
+            No movies matched “{searchValue}”. Try a different search.
           </div>
         )}
       </div>
 
-      <MovieModal
-        movie={selectedMovie}
-        onClose={() => setSelectedMovie(null)}
-        onToggleMyList={toggleMyList}
-        onSetFeatured={setManualFeatured}
-        isInMyList={selectedMovie ? watchlistIds.includes(selectedMovie.id) : false}
-        onPlayMovie={playMovie}
-      />
+      <MovieModal movie={selectedMovie} onClose={() => setSelectedMovie(null)} />
     </main>
   );
 }
