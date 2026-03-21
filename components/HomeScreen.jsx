@@ -41,19 +41,29 @@ export default function HomeScreen({ featured, rows }) {
   const [watchlistIds, setWatchlistIds] = useState([]);
   const [manualFeatured, setManualFeatured] = useState(null);
   const [progressMap, setProgressMap] = useState({});
+  const [hasLoadedStorage, setHasLoadedStorage] = useState(false);
 
   useEffect(() => {
     setWatchlistIds(loadStoredJson(WATCHLIST_KEY, []));
     setProgressMap(loadStoredJson(CONTINUE_KEY, {}));
+    setHasLoadedStorage(true);
   }, []);
 
   useEffect(() => {
+    if (!hasLoadedStorage) {
+      return;
+    }
+
     saveStoredJson(WATCHLIST_KEY, watchlistIds);
-  }, [watchlistIds]);
+  }, [hasLoadedStorage, watchlistIds]);
 
   useEffect(() => {
+    if (!hasLoadedStorage) {
+      return;
+    }
+
     saveStoredJson(CONTINUE_KEY, progressMap);
-  }, [progressMap]);
+  }, [hasLoadedStorage, progressMap]);
 
   const allMovies = useMemo(() => {
     const seen = new Map();

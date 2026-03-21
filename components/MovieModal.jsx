@@ -9,6 +9,9 @@ export default function MovieModal({ movie, onClose, onToggleMyList, onSetFeatur
       return undefined;
     }
 
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') {
         onClose();
@@ -17,7 +20,10 @@ export default function MovieModal({ movie, onClose, onToggleMyList, onSetFeatur
 
     window.addEventListener('keydown', handleKeyDown);
 
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   }, [movie, onClose]);
 
   if (!movie) {
@@ -56,7 +62,7 @@ export default function MovieModal({ movie, onClose, onToggleMyList, onSetFeatur
           ✕
         </button>
 
-        <div className="grid md:grid-cols-[1.2fr_0.8fr]">
+        <div className="grid max-h-[85vh] overflow-y-auto md:grid-cols-[1.2fr_0.8fr]">
           <div className="relative h-72 w-full md:h-full md:min-h-[430px]">
             {movie.backdropUrl ? (
               <Image src={movie.backdropUrl} alt={movie.title} fill className="object-cover" sizes="(max-width: 768px) 100vw, 700px" />
